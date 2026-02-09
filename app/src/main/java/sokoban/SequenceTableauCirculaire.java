@@ -1,13 +1,16 @@
 package sokoban;
 
-public class SequenceTableauCirculaire {
+public class SequenceTableauCirculaire implements Sequence {
     private static final int NB_MIN_TAB = 4;
     private int capacite;
     private int tab[];  
     private int s; // Index début 
     private int e; // Index fin + 1
 
-    SequenceTableauCirculaire() {
+    /**
+     * Renvoie une séquence implémentée par un tableau circulaire vide
+     */
+    public SequenceTableauCirculaire() {
         capacite = SequenceTableauCirculaire.NB_MIN_TAB;
         tab = new int[capacite];
         s = 0;
@@ -43,7 +46,7 @@ public class SequenceTableauCirculaire {
         }
     }
 
-    public int taille() {
+    private int taille() {
         if (e < s) {
             return e + capacite - s; 
         } else {
@@ -51,10 +54,12 @@ public class SequenceTableauCirculaire {
         }
     }
 
+    @Override
     public boolean estVide() {
         return this.taille() <= 0;
     }
 
+    @Override
     public void insereTete(int element){
         if (this.capaciteFaible(this.taille()+1)) {
             doubleCapacite();
@@ -68,6 +73,7 @@ public class SequenceTableauCirculaire {
         return;
     }
 
+    @Override
     public void insereQueue(int element) {
         if (this.capaciteFaible(this.taille()+1)) {
             doubleCapacite();
@@ -80,8 +86,8 @@ public class SequenceTableauCirculaire {
         }
         return;
     }
-    
-    public int extraitTete(){
+    @Override
+    public int extraitTete() throws Exception {
         int v;
         if (this.estVide()) {
             throw new RuntimeException("Séquence vide");
@@ -95,7 +101,7 @@ public class SequenceTableauCirculaire {
         }
         return v;
     }
-
+    @Override
     public String toString() {
         String txt = "[";
         int i;
@@ -107,5 +113,58 @@ public class SequenceTableauCirculaire {
             txt += this.tab[(i+s)%capacite];
         }
         return txt+"]";
+    }
+
+    private class IterateurSequenceTableauCirculaire implements Iterateur {
+        int prochain;
+        boolean dejaSuppr = false;
+        boolean prochainAppele = false;
+        
+        IterateurSequenceTableauCirculaire(SequenceTableauCirculaire sequence) {
+            prochain = s;
+        }
+        @Override
+        public boolean aProchain() {
+            return prochain != e;
+        }
+        @Override
+        public int prochain() {
+            if (!aProchain()) {
+                throw new java.util.NoSuchElementException();
+            }
+            dejaSuppr = false;
+            prochainAppele = true;
+            int temp = prochain;
+            prochain = (prochain+1)%capacite;
+            return tab[temp];
+        }
+        @Override
+        public void supprime() {
+            if (dejaSuppr) {
+                throw new IllegalStateException("Element déjà supprimé");
+            }
+            if (!prochainAppele) {
+                throw new IllegalStateException("Aucun élément courant à supprimer");
+            }
+            dejaSuppr = true;
+            
+            int indexASupprimer = (prochain - 1 + capacite) % capacite;
+            
+            int i = indexASupprimer;
+            while (i != (e - 1 + capacite) % capacite) {
+                int next = (i + 1) % capacite;
+                tab[i] = tab[next];
+                i = next;
+            }
+            
+            e = (e - 1 + capacite) % capacite;
+            
+            prochain = (prochain - 1 + capacite) % capacite;
+        }
+    }
+
+    @Override
+    public Iterateur iterateur() {
+        return new IterateurSequenceTableauCirculaire(this);
     }
 }
