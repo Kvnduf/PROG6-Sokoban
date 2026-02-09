@@ -1,18 +1,18 @@
-package sokoban;
+package sokoban.Structures;
 import java.util.NoSuchElementException;
 
-public class SequenceListe implements Sequence {
+public class SequenceListe<E> implements Sequence<E> {
 
     private class Maillon {
-        int val;
+        E val;
         Maillon suivant;
 
-        Maillon(int nouveau_val, Maillon nouveau_suivant){
+        Maillon(E nouveau_val, Maillon nouveau_suivant){
             val = nouveau_val;
             suivant = nouveau_suivant;
         }
 
-        // public void set_val(int nouvelle_val) {
+        // public void set_val(E nouvelle_val) {
         //     val = nouvelle_val;
         // }
 
@@ -20,7 +20,7 @@ public class SequenceListe implements Sequence {
             suivant = nouveau_suivant;
         }
 
-        public int get_val() {
+        public E get_val() {
             return val;
         }
 
@@ -47,7 +47,7 @@ public class SequenceListe implements Sequence {
     }
 
     @Override
-    public void insereTete(int element){
+    public void insereTete(E element){
         if (this.estVide()) {
             tete = new Maillon(element, null);
             queue = tete;
@@ -58,7 +58,7 @@ public class SequenceListe implements Sequence {
     }
 
     @Override
-    public void insereQueue(int element) {
+    public void insereQueue(E element) {
         if (this.estVide()) {
             tete = new Maillon(element, null);
             queue = tete;
@@ -69,8 +69,8 @@ public class SequenceListe implements Sequence {
         }
     }
     @Override
-    public int extraitTete() throws Exception {
-        int v = 0;
+    public E extraitTete() throws Exception {
+        E v = null;
         if (this.estVide()) {
             throw new RuntimeException("Séquence vide");
         } else if (tete.get_suivant() == null) { // Un seul élément
@@ -99,22 +99,21 @@ public class SequenceListe implements Sequence {
         } 
         return txt+"]";
     }
-    private class IterateurSequenceListe implements Iterateur {
+
+    private class IterateurSequenceListe implements Iterateur<E> {
         Maillon prochain = null;
         Maillon courant = null;
         Maillon precedent = null;
         Boolean dejaSuppr = false;
-        SequenceListe s = null;
-        IterateurSequenceListe(SequenceListe sequence) {
-            s = sequence;
-            prochain = sequence.tete;
+        IterateurSequenceListe() {
+            prochain = tete;
         }
         @Override
         public boolean aProchain() {
             return prochain != null;
         }
         @Override
-        public int prochain() {
+        public E prochain() {
             if (!aProchain()) {
                 throw new NoSuchElementException();
             }
@@ -133,15 +132,15 @@ public class SequenceListe implements Sequence {
                 throw new IllegalStateException("Aucun élément courant à supprimer");
             }
             dejaSuppr = true;
-            if (courant == s.tete) {
-                s.tete = prochain;
-                if (s.tete == null) {
-                    s.queue = null;
+            if (courant == tete) {
+                tete = prochain;
+                if (tete == null) {
+                    queue = null;
                 }
-            } else if (courant == s.queue) {
-                s.queue = precedent;
-                if (s.queue != null) {
-                    s.queue.suivant = null;
+            } else if (courant == queue) {
+                queue = precedent;
+                if (queue != null) {
+                    queue.suivant = null;
                 }
             } else {
                 precedent.suivant = prochain;
@@ -151,7 +150,7 @@ public class SequenceListe implements Sequence {
     }
 
     @Override
-    public Iterateur iterateur() {
-        return new IterateurSequenceListe(this);
+    public Iterateur<E> iterateur() {
+        return new IterateurSequenceListe();
     }
 }

@@ -1,5 +1,5 @@
-package sokoban;
-public interface Iterateur {
+package sokoban.Structures;
+public interface Iterateur<E> {
     /**
      * Indique s'il existe un prochain élément dans la séquence.
      * @return true s'il existe un prochain élément, false sinon
@@ -9,7 +9,7 @@ public interface Iterateur {
      * Retourne le prochain élément de la séquence.
      * @return le prochain élément de la séquence
      */
-    int prochain();
+    E prochain();
     /**
      * Supprime le dernier élément retourné par prochain() de la séquence.
      */

@@ -1,5 +1,5 @@
-package sokoban;
-public interface Sequence {
+package sokoban.Structures;
+public interface Sequence<E> {
     /**
      * Indique si la séquence est vide ou pas
      * @return true si la séquence est vide, false sinon
@@ -9,18 +9,18 @@ public interface Sequence {
      * Insère un élément en tête de la séquence
      * @param element l'élément à insérer
      */
-    void insereTete(int element);
+    void insereTete(E element);
     /**
      * Insère un élément en queue de la séquence
      * @param element l'élément à insérer
      */
-    void insereQueue(int element);
+    void insereQueue(E element);
     /**
      * Extrait et retourne l'élément en tête de la séquence
      * @return l'élément en tête de la séquence
      * @throws Exception si la séquence est vide
      */
-    int extraitTete() throws Exception;
+    E extraitTete() throws Exception;
     /**
      * Retourne une représentation sous forme de chaîne de caractères de la séquence
      * @return la représentation sous forme de chaîne de caractères de la séquence
@@ -30,6 +30,6 @@ public interface Sequence {
      * Retourne un itérateur pour parcourir la séquence
      * @return un itérateur pour la séquence
      */
-    Iterateur iterateur();
+    Iterateur<E> iterateur();
 }
 

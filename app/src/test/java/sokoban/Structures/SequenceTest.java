@@ -1,4 +1,4 @@
-package sokoban;
+package sokoban.Structures;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -15,23 +15,23 @@ class SequenceTest {
     /**
      * Fournit toutes les implémentations de Sequence à tester
      */
-    static Stream<Sequence> sequenceProvider() {
+    static Stream<Sequence<Integer>> sequenceProvider() {
         return Stream.of(
-            new SequenceListe(),
-            new SequenceTableauCirculaire()
+            new SequenceListe<>(),
+            new SequenceTableauCirculaire<>()
         );
     }
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testSequenceVideInitiale(Sequence sequence) {
+    void testSequenceVideInitiale(Sequence<Integer> sequence) {
         assertTrue(sequence.estVide());
         assertEquals("[]", sequence.toString());
     }
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testInsereTeteUnElement(Sequence sequence) {
+    void testInsereTeteUnElement(Sequence<Integer> sequence) {
         sequence.insereTete(0);
         assertFalse(sequence.estVide());
         assertEquals("[0]", sequence.toString());
@@ -39,7 +39,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testExtraitTeteUnElement(Sequence sequence) throws Exception {
+    void testExtraitTeteUnElement(Sequence<Integer> sequence) throws Exception {
         sequence.insereTete(0);
         assertEquals(0, sequence.extraitTete());
         assertTrue(sequence.estVide());
@@ -48,7 +48,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testInsereQueueUnElement(Sequence sequence) {
+    void testInsereQueueUnElement(Sequence<Integer> sequence) {
         sequence.insereQueue(0);
         assertFalse(sequence.estVide());
         assertEquals("[0]", sequence.toString());
@@ -56,7 +56,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testExtraitTeteApresInsereQueue(Sequence sequence) throws Exception {
+    void testExtraitTeteApresInsereQueue(Sequence<Integer> sequence) throws Exception {
         sequence.insereQueue(0);
         assertEquals(0, sequence.extraitTete());
         assertTrue(sequence.estVide());
@@ -65,7 +65,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testInsereTetePlusieursElements(Sequence sequence) throws Exception {
+    void testInsereTetePlusieursElements(Sequence<Integer> sequence) throws Exception {
         sequence.insereTete(1);
         sequence.insereTete(2);
         sequence.insereTete(3);
@@ -81,7 +81,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testInsereQueuePlusieursElements(Sequence sequence) throws Exception {
+    void testInsereQueuePlusieursElements(Sequence<Integer> sequence) throws Exception {
         sequence.insereQueue(1);
         sequence.insereQueue(2);
         sequence.insereQueue(3);
@@ -97,7 +97,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testExtraitTeteSequenceVide(Sequence sequence) {
+    void testExtraitTeteSequenceVide(Sequence<Integer> sequence) {
         Exception exception = assertThrows(RuntimeException.class, () -> {
             sequence.extraitTete();
         });
@@ -106,7 +106,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testMelangeInsertionsTeteQueue(Sequence sequence) throws Exception {
+    void testMelangeInsertionsTeteQueue(Sequence<Integer> sequence) throws Exception {
         sequence.insereTete(1);
         sequence.insereQueue(2);
         sequence.insereTete(0);
@@ -123,7 +123,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testInsertionsExtractionsAlternees(Sequence sequence) throws Exception {
+    void testInsertionsExtractionsAlternees(Sequence<Integer> sequence) throws Exception {
         sequence.insereTete(1);
         assertEquals(1, sequence.extraitTete());
         sequence.insereQueue(2);
@@ -135,7 +135,7 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testGrandeQuantiteElements(Sequence sequence) {
+    void testGrandeQuantiteElements(Sequence<Integer> sequence) {
         // Insère beaucoup d'éléments
         for (int i = 0; i < 100; i++) {
             sequence.insereQueue(i);
@@ -152,19 +152,19 @@ class SequenceTest {
     
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurSequenceVide(Sequence sequence) {
-        Iterateur it = sequence.iterateur();
+    void testIterateurSequenceVide(Sequence<Integer> sequence) {
+        Iterateur<Integer> it = sequence.iterateur();
         assertFalse(it.aProchain());
     }
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurParcours(Sequence sequence) {
+    void testIterateurParcours(Sequence<Integer> sequence) {
         for (int i = 1; i <= 5; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         int[] expected = {1, 2, 3, 4, 5};
         int index = 0;
         
@@ -176,13 +176,13 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateursIndependants(Sequence sequence) {
+    void testIterateursIndependants(Sequence<Integer> sequence) {
         for (int i = 1; i <= 5; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it1 = sequence.iterateur();
-        Iterateur it2 = sequence.iterateur();
+        Iterateur<Integer> it1 = sequence.iterateur();
+        Iterateur<Integer> it2 = sequence.iterateur();
         
         assertEquals(1, it1.prochain());
         assertEquals(2, it1.prochain());
@@ -192,12 +192,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurExceptionProchainSansElement(Sequence sequence) {
+    void testIterateurExceptionProchainSansElement(Sequence<Integer> sequence) {
         for (int i = 1; i <= 3; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         it.prochain();
         it.prochain();
         it.prochain();
@@ -209,12 +209,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurApresInsertionTete(Sequence sequence) {
+    void testIterateurApresInsertionTete(Sequence<Integer> sequence) {
         for (int i = 1; i <= 5; i++) {
             sequence.insereTete(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         int[] expected = {5, 4, 3, 2, 1};
         int index = 0;
         
@@ -225,12 +225,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurSuppression(Sequence sequence) {
+    void testIterateurSuppression(Sequence<Integer> sequence) {
         for (int i = 1; i <= 5; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         it.prochain(); // 1
         it.supprime();
         
@@ -245,12 +245,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurSuppressionImpairs(Sequence sequence) {
+    void testIterateurSuppressionImpairs(Sequence<Integer> sequence) {
         for (int i = 1; i <= 10; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         while (it.aProchain()) {
             int val = it.prochain();
             if (val % 2 == 1) {
@@ -263,12 +263,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurSuppressionTete(Sequence sequence) {
+    void testIterateurSuppressionTete(Sequence<Integer> sequence) {
         for (int i = 1; i <= 5; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         it.prochain();
         it.supprime();
         
@@ -277,12 +277,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurSuppressionQueue(Sequence sequence) {
+    void testIterateurSuppressionQueue(Sequence<Integer> sequence) {
         for (int i = 1; i <= 5; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         while (it.aProchain()) {
             int val = it.prochain();
             if (val == 5) {
@@ -295,12 +295,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurExceptionDoubleSuppression(Sequence sequence) {
+    void testIterateurExceptionDoubleSuppression(Sequence<Integer> sequence) {
         for (int i = 1; i <= 3; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         it.prochain();
         it.supprime();
         
@@ -311,12 +311,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurExceptionSuppressionAvantProchain(Sequence sequence) {
+    void testIterateurExceptionSuppressionAvantProchain(Sequence<Integer> sequence) {
         for (int i = 1; i <= 3; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         assertThrows(IllegalStateException.class, () -> {
             it.supprime();
         });
@@ -324,12 +324,12 @@ class SequenceTest {
 
     @ParameterizedTest
     @MethodSource("sequenceProvider")
-    void testIterateurSuppressionTousElements(Sequence sequence) {
+    void testIterateurSuppressionTousElements(Sequence<Integer> sequence) {
         for (int i = 1; i <= 5; i++) {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         while (it.aProchain()) {
             it.prochain();
             it.supprime();

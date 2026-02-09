@@ -1,4 +1,4 @@
-package sokoban;
+package sokoban.Structures;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,11 +12,11 @@ import static org.junit.jupiter.api.Assertions.*;
  * - Itération dans un tableau circulaire
  */
 class SequenceTableauCirculaireSpecificTest {
-    private SequenceTableauCirculaire sequence;
+    private SequenceTableauCirculaire<Integer> sequence;
 
     @BeforeEach
     void setUp() {
-        sequence = new SequenceTableauCirculaire();
+        sequence = new SequenceTableauCirculaire<>();
     }
 
     @Test
@@ -103,7 +103,7 @@ class SequenceTableauCirculaireSpecificTest {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         int[] expected = {3, 4, 5, 6};
         int index = 0;
         
@@ -126,7 +126,7 @@ class SequenceTableauCirculaireSpecificTest {
             sequence.insereQueue(i);
         }
         
-        Iterateur it = sequence.iterateur();
+        Iterateur<Integer> it = sequence.iterateur();
         it.prochain(); // 3
         it.prochain(); // 4
         it.supprime();

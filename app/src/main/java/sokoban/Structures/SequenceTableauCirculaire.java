@@ -1,18 +1,20 @@
-package sokoban;
+package sokoban.Structures;
 
-public class SequenceTableauCirculaire implements Sequence {
+
+public class SequenceTableauCirculaire<E> implements Sequence<E> {
     private static final int NB_MIN_TAB = 4;
     private int capacite;
-    private int tab[];  
+    private E tab[];  
     private int s; // Index début 
     private int e; // Index fin + 1
 
+    @SuppressWarnings("unchecked")
     /**
      * Renvoie une séquence implémentée par un tableau circulaire vide
      */
     public SequenceTableauCirculaire() {
         capacite = SequenceTableauCirculaire.NB_MIN_TAB;
-        tab = new int[capacite];
+        tab = (E[]) new Object[capacite];
         s = 0;
         e = 0;
     }
@@ -21,10 +23,12 @@ public class SequenceTableauCirculaire implements Sequence {
         return (nouv_taille >  capacite-1);
     }
 
+    @SuppressWarnings("unchecked")
     private void doubleCapacite() {
+        E nouv_tableau[] = (E[]) new Object[2*capacite];
+        int i;
+
         if (e < s) {
-            int nouv_tableau[] = new int[2*capacite];
-            int i;
             for (i = s ; i < capacite ; i++) {
                 nouv_tableau[i + capacite] = tab[i];
             }
@@ -34,10 +38,7 @@ public class SequenceTableauCirculaire implements Sequence {
             s = s + capacite;
             tab = nouv_tableau;
             capacite = 2*capacite;
-
         } else {
-            int nouv_tableau[] = new int[2*capacite];
-            int i;
             for (i = s ; i < e ; i++) {
                 nouv_tableau[i] = tab[i];
             }
@@ -60,7 +61,7 @@ public class SequenceTableauCirculaire implements Sequence {
     }
 
     @Override
-    public void insereTete(int element){
+    public void insereTete(E element){
         if (this.capaciteFaible(this.taille()+1)) {
             doubleCapacite();
         }
@@ -74,7 +75,7 @@ public class SequenceTableauCirculaire implements Sequence {
     }
 
     @Override
-    public void insereQueue(int element) {
+    public void insereQueue(E element) {
         if (this.capaciteFaible(this.taille()+1)) {
             doubleCapacite();
         }
@@ -86,13 +87,14 @@ public class SequenceTableauCirculaire implements Sequence {
         }
         return;
     }
+
     @Override
-    public int extraitTete() throws Exception {
-        int v;
+    public E extraitTete() throws Exception {
+        E v;
         if (this.estVide()) {
             throw new RuntimeException("Séquence vide");
         } else {
-            v = tab[s];
+            v = (E) tab[s];
             if (s == capacite - 1) {
                 s = 0;
             } else {
@@ -115,12 +117,12 @@ public class SequenceTableauCirculaire implements Sequence {
         return txt+"]";
     }
 
-    private class IterateurSequenceTableauCirculaire implements Iterateur {
+    private class IterateurSequenceTableauCirculaire implements Iterateur<E> {
         int prochain;
         boolean dejaSuppr = false;
         boolean prochainAppele = false;
         
-        IterateurSequenceTableauCirculaire(SequenceTableauCirculaire sequence) {
+        IterateurSequenceTableauCirculaire(SequenceTableauCirculaire<E> sequence) {
             prochain = s;
         }
         @Override
@@ -128,7 +130,7 @@ public class SequenceTableauCirculaire implements Sequence {
             return prochain != e;
         }
         @Override
-        public int prochain() {
+        public E prochain() {
             if (!aProchain()) {
                 throw new java.util.NoSuchElementException();
             }
@@ -136,7 +138,7 @@ public class SequenceTableauCirculaire implements Sequence {
             prochainAppele = true;
             int temp = prochain;
             prochain = (prochain+1)%capacite;
-            return tab[temp];
+            return (E) tab[temp];
         }
         @Override
         public void supprime() {
@@ -164,7 +166,7 @@ public class SequenceTableauCirculaire implements Sequence {
     }
 
     @Override
-    public Iterateur iterateur() {
+    public Iterateur<E> iterateur() {
         return new IterateurSequenceTableauCirculaire(this);
     }
 }
