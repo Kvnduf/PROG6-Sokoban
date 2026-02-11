@@ -1,24 +1,24 @@
 package sokoban;
-import java.io.*;
+import javax.swing.SwingUtilities;
 
 public class App {
     public static void main(String[] args) {
-        String chemin = "Original.txt";
-        try (InputStream fichierNiveaux = App.class.getClassLoader().getResourceAsStream(chemin);
-             OutputStream fichierSortie = System.out;) {
-            if (fichierNiveaux == null) {
-                System.out.println("Erreur : Fichier " + chemin + " introuvable dans le classpath.");
-                return;
+        if (args.length < 1) {
+            System.out.println("Usage: ./gradlew run --args=\"<level_number>\"");
+            return;
+        }
+        try {
+            Jeu jeu = new Jeu();
+            boolean b;
+            
+            while ((b = jeu.prochainNiveau()) && !jeu.niveau().nom().equals(args[0]));
+
+            if (!b) {
+                throw new Exception("Niveau " + args[0] + " introuvable dans le fichier de niveaux.");
+            } else {
+                SwingUtilities.invokeLater(new InterfaceGraphique(jeu));
             }
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fichierNiveaux));
-            BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(fichierSortie));
-            LecteurNiveaux lecteur = new LecteurNiveaux();
-            RedacteurNiveau redacteur = new RedacteurNiveau();
-            Niveau niveauCourant = null;
-            while ((niveauCourant = lecteur.lisProchainNiveau(reader)) != null) {
-                redacteur.ecrisNiveau(writer, niveauCourant);
-            }
-            writer.flush();
+            
         } catch (Exception e) {
             System.out.println("Erreur :  " + e.getMessage());
         }
