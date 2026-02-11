@@ -1,3 +1,4 @@
+package sokoban.demo;
 /*
  * Sokoban - Encore une nouvelle version (à but pédagogique) du célèbre jeu
  * Copyright (C) 2018 Guillaume Huard
@@ -37,7 +38,7 @@ class AireDeDessin extends JComponent {
 	public AireDeDessin() {
 		try {
 			// Chargement de l'image de la même manière que le fichier de niveaux
-			InputStream in = new FileInputStream("res/Images/Pousseur.png");
+			InputStream in = getClass().getClassLoader().getResourceAsStream("Images/Pousseur.png");
 			// Chargement d'une image utilisable dans Swing
 			img = ImageIO.read(in);
 		} catch (FileNotFoundException e) {
