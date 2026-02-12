@@ -1,6 +1,9 @@
 package sokoban;
 import javax.imageio.ImageIO;
 import javax.swing.*;
+
+import sokoban.Global.Configuration;
+
 import java.awt.*;
 import java.io.*;
 
@@ -15,17 +18,24 @@ public class NiveauGraphique extends JComponent {
 
 	int unit;
 
-
-    public NiveauGraphique(Jeu jeu) {
+	/**
+	 * Construit un composant graphique pour afficher le niveau courant du jeu donné en paramètre.
+	 * @param jeu Le jeu dont le niveau courant doit être affiché
+	 * @throws FileNotFoundException Si les fichiers d'images ne sont pas trouvés dans le classpath
+	 * @throws IOException Si une erreur survient lors du chargement des images
+	 * @throws Exception Si une erreur survient lors de l'ouverture ou du chargement des images, avec un message d'erreur approprié
+	 * @see Configuration.ouvre(String)
+	 */
+    public NiveauGraphique(Jeu jeu) throws Exception{
         this.jeu = jeu;
         try {
 			// Chargement de l'image de la même manière que le fichier de niveaux
-			InputStream inBut = getClass().getClassLoader().getResourceAsStream("Images/But.png");
-			InputStream inCaisseBut = getClass().getClassLoader().getResourceAsStream("Images/Caisse_sur_but.png");
-			InputStream inCaisse = getClass().getClassLoader().getResourceAsStream("Images/Caisse.png");
-			InputStream inMur = getClass().getClassLoader().getResourceAsStream("Images/Mur.png");
-            InputStream inPousseur = getClass().getClassLoader().getResourceAsStream("Images/Pousseur.png");
-			InputStream inSol = getClass().getClassLoader().getResourceAsStream("Images/Sol.png");
+			InputStream inBut = Configuration.ouvre("Images/But.png");
+			InputStream inCaisseBut = Configuration.ouvre("Images/Caisse_sur_but.png");
+			InputStream inCaisse = Configuration.ouvre("Images/Caisse.png");
+			InputStream inMur = Configuration.ouvre("Images/Mur.png");
+            InputStream inPousseur = Configuration.ouvre("Images/Pousseur.png");
+			InputStream inSol = Configuration.ouvre("Images/Sol.png");
 
 
 			imgBut = ImageIO.read(inBut);
@@ -39,43 +49,41 @@ public class NiveauGraphique extends JComponent {
 			unit = 50;
 		
 		} catch (FileNotFoundException e) {
-			System.err.println("ERREUR : impossible de trouver les fichiers d'images");
-			System.exit(2);
+			throw new Exception("Impossible de trouver les fichiers d'images");
 		} catch (IOException e) {
-			System.err.println("ERREUR : impossible de charger les images");
-			System.exit(3);
+			throw new Exception("Impossible de charger les images");
 		}
     }
 
-
-	void dessineBut(Graphics2D drawable, int x, int y) {
+	// Méthodes de dessin pour les différents éléments du niveau
+	private void dessineBut(Graphics2D drawable, int x, int y) {
 		drawable.drawImage(imgBut, x*unit, y*unit, unit, unit, null);
 	}
-	void dessineCaisse(Graphics2D drawable, int x, int y) {
+	private void dessineCaisse(Graphics2D drawable, int x, int y) {
 		drawable.drawImage(imgCaisse, x*unit, y*unit, unit, unit, null);
 	}
 
-	void dessineCaisseBut(Graphics2D drawable, int x, int y) {
+	private void dessineCaisseBut(Graphics2D drawable, int x, int y) {
 		drawable.drawImage(imgCaisseBut, x*unit, y*unit, unit, unit, null);
 	}
 
-	void dessineMur(Graphics2D drawable, int x, int y) {
+	private void dessineMur(Graphics2D drawable, int x, int y) {
 		drawable.drawImage(imgMur, x*unit, y*unit, unit, unit, null);
 	}
 	
-	void dessinePousseur(Graphics2D drawable, int x, int y) {
+	private void dessinePousseur(Graphics2D drawable, int x, int y) {
 		drawable.drawImage(imgPousseur, x*unit, y*unit, unit, unit, null);
 	}
-	void dessineSol(Graphics2D drawable, int x, int y) {
+	private void dessineSol(Graphics2D drawable, int x, int y) {
 		drawable.drawImage(imgSol, x*unit, y*unit, unit, unit, null);
 	}
 
 
-	
-
-
-
     @Override
+	/**
+	 * Redéfinit la méthode paintComponent pour dessiner le niveau courant du jeu en utilisant les images chargées pour les différents éléments du niveau.
+	 * @param g L'objet Graphics utilisé pour dessiner le composant
+	 */
 	public void paintComponent(Graphics g) {
 
 		// Graphics 2D est le vrai type de l'objet passé en paramètre

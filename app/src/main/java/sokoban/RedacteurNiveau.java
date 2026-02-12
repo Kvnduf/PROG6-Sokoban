@@ -1,4 +1,5 @@
 package sokoban;
+import sokoban.Global.*;
 import java.io.BufferedWriter;
 
 public class RedacteurNiveau {
@@ -29,7 +30,7 @@ public class RedacteurNiveau {
             writer.write("; "+niv.nom()+"\n\n");
             writer.flush();
         } catch (Exception e) {
-            System.out.println("Erreur : "+e.getMessage());
+            Configuration.affiche_erreur("Lors de l'écriture du niveau : " + e.getMessage());
         }
     }
 }

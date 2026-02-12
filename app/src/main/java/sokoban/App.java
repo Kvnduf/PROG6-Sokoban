@@ -1,10 +1,11 @@
 package sokoban;
+import sokoban.Global.*;
 import javax.swing.SwingUtilities;
 
 public class App {
     public static void main(String[] args) {
         if (args.length < 1) {
-            System.out.println("Usage: ./gradlew run --args=\"<level_number>\"");
+            Configuration.affiche_erreur("Usage: ./gradlew run --args=\"<level_number>\"");
             return;
         }
         try {
@@ -20,7 +21,8 @@ public class App {
             }
             
         } catch (Exception e) {
-            System.out.println("Erreur :  " + e.getMessage());
+            Configuration.affiche_erreur(e.getMessage());
+            System.exit(1);
         }
     }
 }
