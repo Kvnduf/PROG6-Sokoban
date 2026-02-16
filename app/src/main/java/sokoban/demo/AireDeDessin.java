@@ -35,6 +35,7 @@ import sokoban.Global.Configuration;
 class AireDeDessin extends JComponent {
 	int counter;
 	Image img;
+	private int pousseurX, pousseurY;
 
 	public AireDeDessin() {
 		// Chargement de l'image de la même manière que le fichier de niveaux
@@ -47,8 +48,18 @@ class AireDeDessin extends JComponent {
 			System.exit(1);
 		}
 		counter = 1;
+
+		// Position initiale du pousseur au centre de la fenetre
+		pousseurX = 100;
+		pousseurY = 100;
 	}
 
+// méthode publique pour mettre à jour la position
+	public void setPousseurPosition(int x, int y) {
+		this.pousseurX = x;
+		this.pousseurY = y;
+		repaint();
+}
 	@Override
 	public void paintComponent(Graphics g) {
 		System.out.println("Entree dans paintComponent : " + counter++);
@@ -57,17 +68,11 @@ class AireDeDessin extends JComponent {
 		// Le cast permet d'avoir acces a un peu plus de primitives de dessin
 		Graphics2D drawable = (Graphics2D) g;
 
-		// On reccupere quelques infos provenant de la partie JComponent
-		int width = getSize().width;
-		int height = getSize().height;
-
-		// On calcule le centre de la zone et un rayon
-		Point center = new Point(width/2, height/2);
-
+		
 		// On efface tout
-		drawable.clearRect(0, 0, width, height);
+		drawable.clearRect(0, 0, getSize().width, getSize().height);
 
 		// On affiche une petite image au milieu
-		drawable.drawImage(img, center.x-20, center.y-20, 40, 40, null);
+		drawable.drawImage(img, pousseurX-20, pousseurY-20, 40, 40, null);
 	}
 }

@@ -31,9 +31,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class EcouteurDeSouris implements MouseListener {
+	private AireDeDessin aireDeDessin;
+	public EcouteurDeSouris(AireDeDessin aireDeDessin) {
+		this.aireDeDessin = aireDeDessin;
+	} 
+	
 	@Override
 	public void mousePressed(MouseEvent e) {
 		System.out.println("Le bouton de la souris a été pressé en (" + e.getX() + ", " + e.getY() + ")");
+		aireDeDessin.setPousseurPosition(e.getX(), e.getY());
 	}
 
 	// Toutes les méthodes qui suivent font partie de l'interface. Si nous ne
