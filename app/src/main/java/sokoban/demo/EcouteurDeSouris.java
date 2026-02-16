@@ -27,32 +27,26 @@ package sokoban.demo;
  */
 
 import javax.swing.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
-// L'interface runnable déclare une méthode run
-public class DemoFenetre implements Runnable {
-	public void run() {
-		// Creation d'une fenetre
-		JFrame frame = new JFrame("Ma fenetre a moi");
-
-		// Ajout de notre composant de dessin dans la fenetre
-		AireDeDessin aire = new AireDeDessin();
-		frame.add(aire);
-
-		// Ecoute des évènements liés à la souris dans l'AireDeDessin
-		aire.addMouseListener(new EcouteurDeSouris());
-
-		// Un clic sur le bouton de fermeture clos l'application
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-		// On fixe la taille et on demarre
-		frame.setSize(500, 300);
-		frame.setVisible(true);
+public class EcouteurDeSouris implements MouseListener {
+	@Override
+	public void mousePressed(MouseEvent e) {
+		System.out.println("Le bouton de la souris a été pressé en (" + e.getX() + ", " + e.getY() + ")");
 	}
 
-	public static void main(String[] args) {
-		// Swing s'exécute dans un thread séparé. En aucun cas il ne faut accéder directement
-		// aux composants graphiques depuis le thread principal. Swing fournit la méthode
-		// invokeLater pour demander au thread de Swing d'exécuter la méthode run d'un Runnable.
-		SwingUtilities.invokeLater(new DemoFenetre());
-	}
+	// Toutes les méthodes qui suivent font partie de l'interface. Si nous ne
+	// nous en servons pas, il suffit de les déclarer vides.
+	// Une autre manière de faire, plus simple, est d'hériter de MouseAdapter,
+	// qui est une classe qui hérite de MouseListener avec une implémentation
+	// vide de toutes ses méthodes.
+	@Override
+	public void mouseClicked(MouseEvent e) { }
+	@Override
+	public void mouseReleased(MouseEvent e) { }
+	@Override
+	public void mouseEntered(MouseEvent e) { }
+	@Override
+	public void mouseExited(MouseEvent e) { }
 }

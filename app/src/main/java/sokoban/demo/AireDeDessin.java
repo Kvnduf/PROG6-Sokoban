@@ -29,24 +29,22 @@ package sokoban.demo;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.io.*;
+import java.io.InputStream;
+import sokoban.Global.Configuration;
 
 class AireDeDessin extends JComponent {
 	int counter;
 	Image img;
 
 	public AireDeDessin() {
+		// Chargement de l'image de la même manière que le fichier de niveaux
 		try {
-			// Chargement de l'image de la même manière que le fichier de niveaux
-			InputStream in = getClass().getClassLoader().getResourceAsStream("Images/Pousseur.png");
+			InputStream in = Configuration.ouvre("Images/Pousseur.png");
 			// Chargement d'une image utilisable dans Swing
 			img = ImageIO.read(in);
-		} catch (FileNotFoundException e) {
-			System.err.println("ERREUR : impossible de trouver le fichier du pousseur");
-			System.exit(2);
-		} catch (IOException e) {
-			System.err.println("ERREUR : impossible de charger l'image");
-			System.exit(3);
+		} catch (Exception e) {
+			System.err.println("Impossible de charger l'image");
+			System.exit(1);
 		}
 		counter = 1;
 	}
