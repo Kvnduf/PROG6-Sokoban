@@ -34,7 +34,7 @@ java {
 
 application {
     // Define the main class for the application.
-    mainClass = "sokoban.demo.DemoFenetre"
+    mainClass = "sokoban.App"
 }
 
 tasks.named<Test>("test") {

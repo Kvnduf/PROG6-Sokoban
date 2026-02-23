@@ -21,13 +21,15 @@ public class NiveauGraphique extends JComponent {
 	/**
 	 * Construit un composant graphique pour afficher le niveau courant du jeu donné en paramètre.
 	 * @param jeu Le jeu dont le niveau courant doit être affiché
+	 * @param unit L'unité de dessin à utiliser pour le niveau graphique
 	 * @throws FileNotFoundException Si les fichiers d'images ne sont pas trouvés dans le classpath
 	 * @throws IOException Si une erreur survient lors du chargement des images
 	 * @throws Exception Si une erreur survient lors de l'ouverture ou du chargement des images, avec un message d'erreur approprié
 	 * @see Configuration.ouvre(String)
 	 */
-    public NiveauGraphique(Jeu jeu) throws Exception{
+    public NiveauGraphique(Jeu jeu, int unit) throws Exception{
         this.jeu = jeu;
+        this.unit = unit;
         try {
 			// Chargement de l'image de la même manière que le fichier de niveaux
 			InputStream inBut = Configuration.ouvre("Images/But.png");
@@ -46,7 +48,10 @@ public class NiveauGraphique extends JComponent {
 			imgSol = ImageIO.read(inSol);
 
 			// Unité de dessin
-			unit = 50;
+			this.unit = unit;
+
+			setFocusable(true);
+			requestFocusInWindow();
 		
 		} catch (FileNotFoundException e) {
 			throw new Exception("Impossible de trouver les fichiers d'images");

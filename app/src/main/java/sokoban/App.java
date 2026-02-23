@@ -17,7 +17,7 @@ public class App {
             if (!b) {
                 throw new Exception("Niveau " + args[0] + " introuvable dans le fichier de niveaux.");
             } else {
-                SwingUtilities.invokeLater(new InterfaceGraphique(jeu));
+                SwingUtilities.invokeLater(new InterfaceGraphique(jeu, 64, false, 640, 480));
             }
             
         } catch (Exception e) {

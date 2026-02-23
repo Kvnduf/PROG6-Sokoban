@@ -2,6 +2,13 @@ package sokoban;
 
 import sokoban.Global.*;
 import javax.swing.JFrame;
+
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+
 import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
 
@@ -9,14 +16,86 @@ import java.awt.GraphicsDevice;
 public class InterfaceGraphique implements Runnable {
     private Jeu jeu;
     private JFrame frame;
-    private boolean maximized = false;
+    private int unit;
+    private boolean maximized;
+    private int windowSizeX;
+    private int windowSizeY;
+
+    NiveauGraphique niveauGraphique;
+    EcouteurDeSouris ecouteurSouris;
+    EcouteurDeClavier ecouteurClavier;
+
+    // Classes interne pour l'écouteur de souris
+    private class EcouteurDeSouris implements MouseListener {
+        @Override
+        public void mousePressed(MouseEvent e) {
+            int ligne = e.getY() / unit;
+            int colonne = e.getX() / unit;
+            
+            if (jeu.declencherMouvementPousseurPosition(ligne, colonne))
+                niveauGraphique.repaint();
+            
+        }
+        
+        @Override
+        public void mouseClicked(MouseEvent e) { }
+        @Override
+        public void mouseReleased(MouseEvent e) { }
+        @Override
+        public void mouseEntered(MouseEvent e) { }
+        @Override
+        public void mouseExited(MouseEvent e) { }
+    }
+
+    // Classe interne pour l'écouteur de clavier
+    private class EcouteurDeClavier implements KeyListener {
+        @Override
+        public void keyPressed(KeyEvent e) {
+            Direction dir = null;
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_UP:
+                    dir = Direction.HAUT;
+                    break;
+                case KeyEvent.VK_DOWN:
+                    dir = Direction.BAS;
+                    break;
+                case KeyEvent.VK_LEFT:
+                    dir = Direction.GAUCHE;
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    dir = Direction.DROITE;
+                    break;
+            }
+            if (dir != null) {
+                if (jeu.declencherMouvementPousseurDirection(dir)) {
+                    niveauGraphique.repaint();
+                } 
+                
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) { }
+
+        @Override
+        public void keyTyped(KeyEvent e) { }
+    }
+
 
     /**
      * Construit une interface graphique pour le jeu donné en paramètre.
      * @param jeu
+     * @param unit L'unité de dessin à utiliser pour le niveau graphique
+     * @param maximized Indique si la fenêtre doit être affichée en plein écran ou non
+     * @param windowSizeX La largeur de la fenêtre en pixels (utilisée si maximized est false)
+     * @param windowSizeY La hauteur de la fenêtre en pixels (utilisée si maximized est false)
      */
-    public InterfaceGraphique(Jeu jeu) {
+    public InterfaceGraphique(Jeu jeu, int unit, boolean maximized, int windowSizeX, int windowSizeY) {
         this.jeu = jeu;
+        this.unit = unit;
+        this.maximized = maximized;
+        this.windowSizeX = windowSizeX;
+        this.windowSizeY = windowSizeY;
     }
 
     /**
@@ -28,7 +107,13 @@ public class InterfaceGraphique implements Runnable {
 
         // Ajout de notre composant de dessin dans la fenetre
         try {
-            frame.add(new NiveauGraphique(jeu));
+            niveauGraphique = new NiveauGraphique(jeu, unit);
+            ecouteurSouris = new EcouteurDeSouris();
+            ecouteurClavier = new EcouteurDeClavier();
+            
+            frame.add(niveauGraphique);
+            niveauGraphique.addKeyListener(ecouteurClavier);
+            niveauGraphique.addMouseListener(ecouteurSouris);
         } catch (Exception e) {
             Configuration.affiche_erreur(e.getMessage());
             System.exit(1);
@@ -38,7 +123,7 @@ public class InterfaceGraphique implements Runnable {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // On fixe la taille et on demarre
-        frame.setSize(500, 300);
+        frame.setSize(windowSizeX, windowSizeY);
         frame.setVisible(true);
         toggleFullscreen();
     }

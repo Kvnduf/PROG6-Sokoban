@@ -1,7 +1,6 @@
 package sokoban;
 
 public class Niveau {
-
     // Types de cases possibles dans le niveau
     enum Puzzle_element {
         WALL,
@@ -15,8 +14,8 @@ public class Niveau {
 
     // Représentation du niveau : une grille de cases
     private Puzzle_element [][] grille;
-    private int longueur = 0;
-    private int largeur = 0;
+    private int longueur;
+    private int largeur;
     private String nom = "";
 
     // Constructeurs
@@ -54,9 +53,12 @@ public class Niveau {
      */
     public void videCase(int i, int j){
         verificationBorneGrille(i, j);
-        grille[i][j] = Niveau.Puzzle_element.FLOOR;
+        if (aBut(i, j)) {
+            grille[i][j] = Puzzle_element.GOAL;
+        } else {
+            grille[i][j] = Puzzle_element.FLOOR;
+        }
     }
-    
     
     /**
      * Ajoute un mur à la ligne i et à la colonne j du niveau.
