@@ -1,4 +1,4 @@
-package sokoban;
+package sokoban.Modele;
 
 public class Niveau {
     // Types de cases possibles dans le niveau

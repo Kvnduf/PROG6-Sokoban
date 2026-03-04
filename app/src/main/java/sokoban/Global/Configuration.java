@@ -4,6 +4,10 @@ import java.io.InputStream;
 
 public class Configuration {
     static public Boolean affichageAvertissement = true;
+    static public int unit = 64;
+    static public Boolean maximized = false;
+    static public int windowSizeX = 640;
+    static public int windowSizeY = 480;
 
     /**
      * Ouvre un flux de lecture vers une ressource du projet, à partir de son chemin relatif.

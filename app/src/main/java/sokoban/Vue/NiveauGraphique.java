@@ -1,13 +1,16 @@
-package sokoban;
+package sokoban.Vue;
+
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 
-import sokoban.Global.Configuration;
+import sokoban.Global.*;
+import sokoban.Modele.*;
 
 import java.awt.*;
 import java.io.*;
 
-public class NiveauGraphique extends JComponent {
+public class NiveauGraphique extends JComponent implements sokoban.Modele.Observateur {
     Jeu jeu;
 	Image imgBut;
 	Image imgCaisseBut;
@@ -52,6 +55,9 @@ public class NiveauGraphique extends JComponent {
 
 			setFocusable(true);
 			requestFocusInWindow();
+
+			// S'enregistre comme observateur du modèle
+			jeu.ajouterObservateur(this);
 		
 		} catch (FileNotFoundException e) {
 			throw new Exception("Impossible de trouver les fichiers d'images");
@@ -61,6 +67,16 @@ public class NiveauGraphique extends JComponent {
     }
 
 	// Méthodes de dessin pour les différents éléments du niveau
+
+	/**
+	 * Appelée par le modèle lorsqu'un changement d'état s'est produit.
+	 * Redessine le composant.
+	 */
+	@Override
+	public void miseAJour() {
+		repaint();
+	}
+
 	private void dessineBut(Graphics2D drawable, int x, int y) {
 		drawable.drawImage(imgBut, x*unit, y*unit, unit, unit, null);
 	}

@@ -1,16 +1,15 @@
-package sokoban;
+package sokoban.Controleur;
 
-import sokoban.Global.*;
+import sokoban.Modele.*;
+
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 public class EcouteurDeClavier implements KeyListener {
     private Jeu jeu;
-    private NiveauGraphique niveauGraphique;
 
-    public EcouteurDeClavier(Jeu jeu, NiveauGraphique niveauGraphique) {
+    public EcouteurDeClavier(Jeu jeu) {
         this.jeu = jeu;
-        this.niveauGraphique = niveauGraphique;
     }
 
     @Override
@@ -31,9 +30,8 @@ public class EcouteurDeClavier implements KeyListener {
                 break;
         }
         if (dir != null) {
-            if (jeu.declencherMouvementPousseurDirection(dir)) {
-                niveauGraphique.repaint();
-            }
+            jeu.declencherMouvementPousseurDirection(dir);
+            // Le modèle notifie la vue via le patron Observateur
         }
     }
 

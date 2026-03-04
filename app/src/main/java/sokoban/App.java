@@ -1,6 +1,8 @@
 package sokoban;
 import sokoban.Global.*;
-import javax.swing.SwingUtilities;
+import sokoban.Modele.*;
+import sokoban.Vue.*;
+import sokoban.Controleur.*;
 
 public class App {
     public static void main(String[] args) {
@@ -17,7 +19,13 @@ public class App {
             if (!b) {
                 throw new Exception("Niveau " + args[0] + " introuvable dans le fichier de niveaux.");
             } else {
-                SwingUtilities.invokeLater(new InterfaceGraphique(jeu, 64, false, 640, 480));
+                InterfaceGraphique vue = new InterfaceGraphique(jeu);
+
+                vue.ajouterEcouteurClavier(new EcouteurDeClavier(jeu));
+                vue.ajouterEcouteurSouris(new EcouteurDeSouris(jeu));
+
+                vue.run();
+
             }
             
         } catch (Exception e) {

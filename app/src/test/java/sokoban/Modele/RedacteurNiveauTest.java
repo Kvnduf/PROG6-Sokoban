@@ -1,4 +1,4 @@
-package sokoban;
+package sokoban.Modele;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.BeforeEach;

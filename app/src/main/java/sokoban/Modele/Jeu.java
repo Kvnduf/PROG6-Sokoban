@@ -1,10 +1,12 @@
-package sokoban;
+package sokoban.Modele;
 
 import sokoban.Global.*;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Jeu {
 
@@ -13,6 +15,7 @@ public class Jeu {
     private InputStream fichierNiv;
     private BufferedReader lecteurBuffer;
     private Niveau niveauCourant = null;
+    private final List<Observateur> observateurs = new ArrayList<>();
 
     /**
      * Construit un jeu en l'initialisant
@@ -23,6 +26,23 @@ public class Jeu {
         fichierNiv = Configuration.ouvre(cheminNiveaux);
         if (fichierNiv == null) throw new FileNotFoundException("Fichier " + cheminNiveaux + " introuvable dans le classpath.");
         lecteurBuffer = new BufferedReader(new InputStreamReader(fichierNiv));
+    }
+
+    /**
+     * Enregistre un observateur qui sera notifié à chaque changement d'état.
+     * @param o L'observateur à enregistrer
+     */
+    public void ajouterObservateur(Observateur o) {
+        observateurs.add(o);
+    }
+
+    /**
+     * Notifie tous les observateurs enregistrés d'un changement d'état.
+     */
+    private void notifierObservateurs() {
+        for (Observateur o : observateurs) {
+            o.miseAJour();
+        }
     }
 
     /**
@@ -101,6 +121,7 @@ public class Jeu {
     public boolean declencherMouvementPousseurDirection(Direction d) {
         if (deplacerPousseurVers(d)) {
             if (estGagne()) prochainNiveau();
+            notifierObservateurs();
             return true;
         }
         return false;

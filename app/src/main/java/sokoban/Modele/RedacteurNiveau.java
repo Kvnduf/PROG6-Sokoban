@@ -1,4 +1,4 @@
-package sokoban;
+package sokoban.Modele;
 import sokoban.Global.*;
 import java.io.BufferedWriter;
 
