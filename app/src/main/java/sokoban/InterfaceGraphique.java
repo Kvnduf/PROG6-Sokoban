@@ -3,12 +3,6 @@ package sokoban;
 import sokoban.Global.*;
 import javax.swing.JFrame;
 
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-
 import java.awt.GraphicsEnvironment;
 import java.awt.GraphicsDevice;
 
@@ -24,62 +18,6 @@ public class InterfaceGraphique implements Runnable {
     NiveauGraphique niveauGraphique;
     EcouteurDeSouris ecouteurSouris;
     EcouteurDeClavier ecouteurClavier;
-
-    // Classes interne pour l'écouteur de souris
-    private class EcouteurDeSouris implements MouseListener {
-        @Override
-        public void mousePressed(MouseEvent e) {
-            int ligne = e.getY() / unit;
-            int colonne = e.getX() / unit;
-            
-            if (jeu.declencherMouvementPousseurPosition(ligne, colonne))
-                niveauGraphique.repaint();
-            
-        }
-        
-        @Override
-        public void mouseClicked(MouseEvent e) { }
-        @Override
-        public void mouseReleased(MouseEvent e) { }
-        @Override
-        public void mouseEntered(MouseEvent e) { }
-        @Override
-        public void mouseExited(MouseEvent e) { }
-    }
-
-    // Classe interne pour l'écouteur de clavier
-    private class EcouteurDeClavier implements KeyListener {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            Direction dir = null;
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_UP:
-                    dir = Direction.HAUT;
-                    break;
-                case KeyEvent.VK_DOWN:
-                    dir = Direction.BAS;
-                    break;
-                case KeyEvent.VK_LEFT:
-                    dir = Direction.GAUCHE;
-                    break;
-                case KeyEvent.VK_RIGHT:
-                    dir = Direction.DROITE;
-                    break;
-            }
-            if (dir != null) {
-                if (jeu.declencherMouvementPousseurDirection(dir)) {
-                    niveauGraphique.repaint();
-                } 
-                
-            }
-        }
-
-        @Override
-        public void keyReleased(KeyEvent e) { }
-
-        @Override
-        public void keyTyped(KeyEvent e) { }
-    }
 
 
     /**
@@ -108,8 +46,8 @@ public class InterfaceGraphique implements Runnable {
         // Ajout de notre composant de dessin dans la fenetre
         try {
             niveauGraphique = new NiveauGraphique(jeu, unit);
-            ecouteurSouris = new EcouteurDeSouris();
-            ecouteurClavier = new EcouteurDeClavier();
+            ecouteurSouris = new EcouteurDeSouris(jeu, niveauGraphique, unit);
+            ecouteurClavier = new EcouteurDeClavier(jeu, niveauGraphique);
             
             frame.add(niveauGraphique);
             niveauGraphique.addKeyListener(ecouteurClavier);
